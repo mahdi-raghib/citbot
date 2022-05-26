@@ -1,0 +1,158 @@
+[
+	{
+		"type": "section",
+		"text": {
+			"type": "plain_text",
+			"text": "Here are papers you have marked.\nYou can manage them and generate BibTeX document for all of them.",
+			"emoji": true
+		}
+	},
+	{
+		"type": "divider"
+	},
+	{% for paper in marked_papers %}
+	{% if paper.source == "aminer" %}
+	{
+		"type": "section",
+		"text": {
+			"type": "mrkdwn",
+			"text": "*{{page * 10 + loop.index}}. {% if paper.authors %}{{paper.authors[0].name|replace("\"", "\\\"")}}, et al. {% endif %}{% if paper.title %}\"{{paper.title|replace("\"", "\\\"")}}\"{% endif %}{% if paper.year %} ({{paper.year}}){% endif %}*\n{% if paper.url %}{% if paper.url is string %}{{paper.url}}{% else %}{{paper.url[0]}}{% endif %}{% endif %}"
+		},
+		"accessory": {
+			"type": "button",
+			"text": {
+				"type": "plain_text",
+				"text": "Delete",
+				"emoji": true
+			},
+			"value": "{{list_id}},{{paper._id}},{{paper.source}},{{page}}",
+			"action_id": "del"
+		}
+	},
+	{% else %}
+	{
+		"type": "section",
+		"text": {
+			"type": "mrkdwn",
+			"text": "*{{page * 10 + loop.index}}. {% if paper.author %}{% if paper.author is string %}{{paper.author|replace("\"", "\\\"")}}, et al. {% else %}{{paper.author[0]|replace("\"", "\\\"")}}, et al. {%endif%}{%endif%}\"{{paper.title|replace("\"", "\\\"")}}\"{% if paper.year %} ({{paper.year}}){% endif %}*\n{% if paper.ee %}{% if paper.ee is string %}{{paper.ee}}{% else %}{{paper.ee[0]}}{% endif %}{% endif %}"
+		},
+		"accessory": {
+			"type": "button",
+			"text": {
+				"type": "plain_text",
+				"text": "Delete",
+				"emoji": true
+			},
+			"value": "{{list_id}},{{paper._id}},{{paper.source}},{{page}}",
+			"action_id": "del"
+		}
+	},
+	{% endif %}
+	{% endfor %}
+	{% if (page != 0) or (next_page == true) %}
+    {
+        "type": "actions",
+        "elements": [
+            {% if page != 0 %}
+            {
+                "type": "button",
+                "text": {
+                    "type": "plain_text",
+                    "text": "Previous page",
+                    "emoji": true
+                },
+                "value": "{{list_id}},{{page-1}}",
+                "action_id": "previous_list"
+            },
+            {% endif %}
+            {% if next_page == true %}
+            {
+                "type": "button",
+                "text": {
+                    "type": "plain_text",
+                    "text": "Next page",
+                    "emoji": true
+                },
+                "value": "{{list_id}},{{page+1}}",
+                "action_id": "next_list"
+            }
+            {% endif %}
+        ]
+    },
+	{% endif %}
+	{
+		"type": "divider"
+	},
+	{
+		"type": "section",
+		"text": {
+			"type": "mrkdwn",
+			"text": "To generate BibTeX document for all the marked papers, please click this button 👉"
+		},
+		"accessory": {
+			"type": "button",
+			"text": {
+				"type": "plain_text",
+				"text": "Generate BibTeX",
+				"emoji": true
+			},
+			"value": "{{list_id}}",
+			"action_id": "bibtex"
+		}
+	},
+	{
+		"type": "section",
+		"text": {
+			"type": "mrkdwn",
+			"text": "If you want to clear the list, please click this button 👉"
+		},
+		"accessory": {
+			"type": "button",
+			"text": {
+				"type": "plain_text",
+				"text": "Delete all",
+				"emoji": true
+			},
+			"value": "{{list_id}}",
+			"action_id": "delall",
+			"confirm": {
+				"title": {
+					"type": "plain_text",
+					"text": "Warning"
+				},
+				"text": {
+					"type": "mrkdwn",
+					"text": "This operation is irreversible!!!\nAre you sure you want to delete all the papers in your marking list?"
+				},
+				"confirm": {
+					"type": "plain_text",
+					"text": "Do it"
+				},
+				"deny": {
+					"type": "plain_text",
+					"text": "Stop, I've changed my mind!"
+				}
+			},
+		}
+	},
+	{
+		"type": "divider"
+	},
+	{
+		"type": "section",
+		"text": {
+			"type": "mrkdwn",
+			"text": "If you found some papers are with wrong information, I am glad to know and correct them 💪"
+		},
+		"accessory": {
+			"type": "button",
+			"text": {
+				"type": "plain_text",
+				"text": "Send feedback",
+				"emoji": true
+			},
+			"value": "list,{{list_id}},{{page}}",
+			"action_id": "feedback"
+		}
+	}
+]

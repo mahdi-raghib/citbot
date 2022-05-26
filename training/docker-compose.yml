@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+    training:
+        image: "marslicy/citbot-training"
+        networks:
+            - mongodb-net
+        ports: 
+            - "27017:27017"
+        stdin_open: true    # docker run -i
+        tty: true   # docker run -t
+    mongodb:
+        image: "mongo"
+        networks:
+            - mongodb-net
+        ports: 
+            - "27017:27017"
+        volumes: 
+            - type: volume
+              source: citation-storage-pv-claim
+              target: /data/db
+
+networks: 
+    mongodb-net:
+
+volumes:
+    citation-storage-pv-claim:
